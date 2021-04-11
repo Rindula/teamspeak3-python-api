@@ -402,6 +402,45 @@ class TS3Connection(object):
                 channel_list.append(candidate)
         return channel_list
 
+    def channel_create(self, channel_name: str, props: dict):
+        """
+        Modifys a Channels Properties
+        :param channel_id: channel_id
+        :param props: dict
+        """
+        cprops = ["channel_name="+str(channel_name)]
+        for key in props.keys():
+            cprops.append(str(key) + "=" + str(props[key]))
+        print(cprops)
+        return TS3Connection._parse_resp_to_dict(self._send("channelcreate", cprops))
+
+    def channel_delete(self, channel_id: str, force=False):
+        """
+        Modifys a Channels Properties
+        :param channel_id: channel_id
+        :param props: dict
+        """
+        cprops = ["cid="+str(channel_id), "force="+str(1 if force else 0)]
+        return TS3Connection._parse_resp_to_dict(self._send("channeldelete", cprops))
+
+    def channel_modify(self, channel_id: str, props: dict):
+        """
+        Modifys a Channels Properties
+        :param channel_id: channel_id
+        :param props: dict
+        """
+        cprops = ["cid="+str(channel_id)]
+        for key in props.keys():
+            cprops.append(str(key) + "=" + str(props[key]))
+        self._send("channeledit", cprops)
+
+    def channelinfo(self, channel_id: str):
+        """
+        Modifys a Channels Properties
+        :param channel_id: channel_id
+        """
+        return TS3Connection._parse_resp_to_dict(self._send("channelinfo", ["cid="+str(channel_id)]))
+
     def sendtextmessage(self, targetmode, target, msg):
         """
         Sends a textmessage to the specified target.
